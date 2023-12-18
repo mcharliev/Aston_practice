@@ -21,15 +21,15 @@ public class MyDynamicArray<E> {
     }
 
     /**
-     * Добавляет элемент в конец листа.
+     * Добавляет элемент в конец листа
      *
      * @param element элемент который нужно добавить
      */
     public void add(E element) {
-        if (size == elements.length) { // Проверка, нужно ли увеличить размер массива
+        if (size == elements.length) {
             increaseCapacity();
         }
-        elements[size++] = element; // Добавление элемента и увеличение счетчика size
+        elements[size++] = element;
     }
 
     /**
@@ -41,14 +41,14 @@ public class MyDynamicArray<E> {
      * @param element элемент для вставки
      */
     public void add(int index, E element) {
-        if (size == elements.length) { // Проверка, нужно ли увеличить размер массива
+        if (size == elements.length) {
             increaseCapacity();
         }
         for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1]; // Сдвиг элементов вправо
+            elements[i] = elements[i - 1];
         }
-        elements[index] = element; // Вставка нового элемента
-        size++; // Увеличение размера
+        elements[index] = element;
+        size++;
     }
 
     /**
@@ -58,7 +58,7 @@ public class MyDynamicArray<E> {
      */
     public void addAll(Collection<? extends E> collection) {
         for (E element : collection) {
-            add(element); // Добавление каждого элемента коллекции
+            add(element);
         }
     }
 
@@ -70,9 +70,9 @@ public class MyDynamicArray<E> {
      */
     public E get(int index) {
         if (index < size) {
-            return (E) elements[index]; // Возврат элемента, если индекс в пределах размера массива
+            return (E) elements[index];
         }
-        return null; // Возврат null, если индекс вне диапазона
+        return null;
     }
 
     /**
@@ -84,14 +84,14 @@ public class MyDynamicArray<E> {
      */
     public E remove(int index) {
         if (index >= size) {
-            return null; // Возврат null, если индекс вне диапазона
+            return null;
         }
-        E removedElement = (E) elements[index]; // Сохранение удаляемого элемента
+        E removedElement = (E) elements[index];
         for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1]; // Сдвиг элементов влево
+            elements[i] = elements[i + 1];
         }
-        size--; // Уменьшение размера
-        return removedElement; // Возврат удаленного элемента
+        size--;
+        return removedElement;
     }
 
     /**
@@ -103,31 +103,31 @@ public class MyDynamicArray<E> {
      */
     public boolean remove(Object o) {
         for (int i = 0; i < size; i++) {
-            if (o.equals(elements[i])) { // Проверка на равенство
-                remove(i); // Удаление элемента
-                return true; // Возврат true, элемент найден и удален
+            if (o.equals(elements[i])) {
+                remove(i);
+                return true;
             }
         }
-        return false; // Возврат false, элемент не найден
+        return false;
     }
 
     /**
      * Удваивает размер массива, используемого для хранения элементов в листе
      */
     private void increaseCapacity() {
-        Object[] newElements = new Object[elements.length * 2]; // Создание нового массива в два раза больше
+        Object[] newElements = new Object[elements.length * 2];
         for (int i = 0; i < size; i++) {
-            newElements[i] = elements[i]; // Копирование элементов в новый массив
+            newElements[i] = elements[i];
         }
-        elements = newElements; // Обновление ссылки на массив
+        elements = newElements;
     }
 
     /**
      * Удаляет все элементы из этого списка. Лист станет пустым после выполнения
      */
     public void clear() {
-        elements = new Object[10]; // Переинициализация массива
-        size = 0; // Обнуление размера
+        elements = new Object[10];
+        size = 0;
     }
 
     /**
@@ -143,7 +143,7 @@ public class MyDynamicArray<E> {
      * Сортирует лист с использованием компаратора. Использует быструю сортировку
      * для листа размером до 50 элементов и сортировку слиянием для более объемных листов
      *
-     * @param c Компаратор, используемый для сравнения элементов списка.
+     * @param c Компаратор, используемый для сравнения элементов списка
      */
     public void sort(Comparator<? super E> c) {
         if (size <= 50) {
@@ -162,12 +162,9 @@ public class MyDynamicArray<E> {
      * @param c    компаратор используемый для сравнения элементов
      */
     private void quicksort(int low, int high, Comparator<? super E> c) {
-        if (low < high) { // Проверка, есть ли что сортировать
-            // Вычисление индекса опорного элемента
+        if (low < high) {
             int pivotIndex = partition(low, high, c);
-            // Рекурсивный вызов для левой части массива
             quicksort(low, pivotIndex - 1, c);
-            // Рекурсивный вызов для правой части массива
             quicksort(pivotIndex + 1, high, c);
         }
     }
@@ -181,11 +178,11 @@ public class MyDynamicArray<E> {
      * @return индекс опорного элемента после разделения
      */
     private int partition(int low, int high, Comparator<? super E> c) {
-        E pivot = (E) elements[high]; // Выбор опорного элемента
-        int i = low - 1; // Инициализация указателя для меньшего элемента
+        E pivot = (E) elements[high];
+        int i = low - 1;
 
-        for (int j = low; j < high; j++) { // Перебор элементов
-            if (c.compare((E) elements[j], pivot) < 0) { // Сравнение с опорным элементом
+        for (int j = low; j < high; j++) {
+            if (c.compare((E) elements[j], pivot) < 0) {
                 i++; // Сдвиг указателя
 
                 // Обмен элементов
@@ -195,12 +192,11 @@ public class MyDynamicArray<E> {
             }
         }
 
-        // Поместить опорный элемент между левой и правой частями массива
         E temp = (E) elements[i + 1];
         elements[i + 1] = elements[high];
         elements[high] = temp;
 
-        return i + 1; // Возврат позиции опорного элемента
+        return i + 1;
     }
 
 
@@ -213,13 +209,10 @@ public class MyDynamicArray<E> {
      * @param aux  вспомогательный массив для слияния
      */
     private void mergesort(int low, int high, Comparator<? super E> c, E[] aux) {
-        if (low < high) { // Проверка, есть ли что сортировать
-            int middle = low + (high - low) / 2; // Нахождение середины диапазона
-            // Рекурсивный вызов для левой части массива
+        if (low < high) {
+            int middle = low + (high - low) / 2;
             mergesort(low, middle, c, aux);
-            // Рекурсивный вызов для правой части массива
             mergesort(middle + 1, high, c, aux);
-            // Слияние двух отсортированных подмассивов
             merge(low, middle, high, c, aux);
         }
     }
@@ -234,14 +227,11 @@ public class MyDynamicArray<E> {
      * @param aux    вспомогательный массив для слияния
      */
     private void merge(int low, int middle, int high, Comparator<? super E> c, E[] aux) {
-        // Копирование элементов в вспомогательный массив
         for (int i = low; i <= high; i++) {
             aux[i] = (E) elements[i];
         }
+        int i = low, j = middle + 1, k = low;
 
-        int i = low, j = middle + 1, k = low; // Инициализация указателей
-
-        // Перемещение меньшего элемента из двух подмассивов обратно в основной массив
         while (i <= middle && j <= high) {
             if (c.compare(aux[i], aux[j]) <= 0) {
                 elements[k] = aux[i];
@@ -252,14 +242,11 @@ public class MyDynamicArray<E> {
             }
             k++;
         }
-
-        // Копирование оставшихся элементов из левой части, если таковые имеются
         while (i <= middle) {
             elements[k] = aux[i];
             k++;
             i++;
         }
-        // Элементы из правой части копировать не нужно, так как они уже находятся на своих местах
     }
 
     @Override
