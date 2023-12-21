@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="007-insert-into-transactions" author="Merdan">
+
+        <insert schemaName="wallet_service" tableName="transactions">
+            <column name="id" value="1"/>
+            <column name="type" value="CREDIT"/>
+            <column name="amount" value="50.00"/>
+            <column name="local_date_time" valueDate="2023-10-15T10:00:00"/>
+            <column name="player_id" valueComputed="(SELECT id FROM wallet_service.players WHERE username='player1')"/>
+        </insert>
+
+        <insert schemaName="wallet_service" tableName="transactions">
+            <column name="id" value="2"/>
+            <column name="type" value="CREDIT"/>
+            <column name="amount" value="100.00"/>
+            <column name="local_date_time" valueDate="2023-10-15T12:00:00"/>
+            <column name="player_id" valueComputed="(SELECT id FROM wallet_service.players WHERE username='player2')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
