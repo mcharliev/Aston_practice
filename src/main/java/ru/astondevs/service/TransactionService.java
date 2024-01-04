@@ -1,10 +1,10 @@
 package ru.astondevs.service;
 
+import ru.astondevs.model.dto.AmountDTO;
+import ru.astondevs.model.dto.TransactionDTO;
+import ru.astondevs.model.dto.TransactionHistoryDTO;
 import ru.astondevs.model.entity.Player;
-import ru.astondevs.model.entity.Transaction;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Интерфейс для работы с транзакциями игроков.
@@ -12,30 +12,28 @@ import java.util.List;
 public interface TransactionService {
 
     /**
-     * Создает дебетовую транзакцию для игрока.
+     * Добавляет дебетовую транзакцию для игрока.
      *
-     * @param player       игрок, для которого создается транзакция
-     * @param debitAmount  сумма дебетовой транзакции
-     * @return созданная дебетовая транзакция {@link Transaction}
+     * @param player    Игрок, для которого создается транзакция, тип {@link Player}.
+     * @param amountDTO Информация о сумме транзакции, тип {@link AmountDTO}.
+     * @return Детали созданной дебетовой транзакции, тип {@link TransactionDTO}.
      */
-    Transaction addDebitTransaction(Player player, BigDecimal debitAmount);
+    TransactionDTO addDebitTransaction(Player player, AmountDTO amountDTO);
 
     /**
-     * Создает кредитовую транзакцию для игрока.
+     * Добавляет кредитовую транзакцию для игрока.
      *
-     * @param player        игрок, для которого создается транзакция
-     * @param creditAmount  сумма кредитовой транзакции
-     * @return созданная кредитовая транзакция {@link Transaction}
+     * @param player    Игрок, для которого создается транзакция, тип {@link Player}.
+     * @param amountDTO Информация о сумме транзакции, тип {@link AmountDTO}.
+     * @return Детали созданной кредитовой транзакции, тип {@link TransactionDTO}.
      */
-    Transaction addCreditTransaction(Player player, BigDecimal creditAmount);
+    TransactionDTO addCreditTransaction(Player player, AmountDTO amountDTO);
 
     /**
-     * Отображает историю транзакций игрока.
+     * Просматривает историю транзакций для игрока.
      *
-     * @param id        идентификатор игрока
-     * @param username  имя игрока
-     * @return список транзакций игрока {@link List<Transaction>}
+     * @param player Игрок, для которого просматривается история транзакций, тип {@link Player}.
+     * @return История транзакций игрока, тип {@link TransactionHistoryDTO}.
      */
-    List<Transaction> viewTransactionHistory(Long id, String username);
-
+    TransactionHistoryDTO viewTransactionHistory(Player player);
 }

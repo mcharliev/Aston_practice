@@ -15,10 +15,9 @@ public interface TransactionRepository {
      * Добавляет новую транзакцию в базу данных.
      *
      * @param transaction Объект транзакции для добавления, см. {@link Transaction}.
-     * @param playerId Идентификатор игрока, для которого добавляется транзакция.
-     * @return Объект транзакции, которая была успешно добавлена, см. {@link Transaction}.
+     * @param playerId    Идентификатор игрока, для которого добавляется транзакция.
      */
-    Transaction addTransaction(Transaction transaction, Long playerId);
+    void addTransaction(Transaction transaction, Long playerId);
 
     /**
      * Получает все транзакции, связанные с определенным игроком, из базы данных.

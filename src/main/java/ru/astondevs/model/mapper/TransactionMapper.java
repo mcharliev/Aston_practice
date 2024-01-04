@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import ru.astondevs.model.dto.TransactionDTO;
 import ru.astondevs.model.entity.Transaction;
 
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ import java.time.format.DateTimeFormatter;
  * Интерфейс маппера для конвертации объектов между {@link Transaction} и {@link TransactionDTO}.
  * Использует библиотеку MapStruct для автоматического создания реализации на основе аннотаций.
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TransactionMapper {
 
     TransactionMapper INSTANCE = Mappers.getMapper(TransactionMapper.class);

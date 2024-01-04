@@ -13,5 +13,6 @@
     <include file="005-create-sequence-transactions.xml"  relativeToChangelogFile="true"/>
     <include file="006-insert-into-players.xml"  relativeToChangelogFile="true"/>
     <include file="007-insert-into-transactions.xml"  relativeToChangelogFile="true"/>
-
+    <include file="008-create-audit-actions-sequence.xml"  relativeToChangelogFile="true"/>
+    <include file="009-create-player-audit-table.xml"  relativeToChangelogFile="true"/>
 </databaseChangeLog>

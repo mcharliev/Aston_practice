@@ -1,18 +1,21 @@
-package ru.astondevs.validator;
+package ru.astondevs.util;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import org.springframework.stereotype.Component;
 import ru.astondevs.model.dto.RegisterPlayerDTO;
 
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 /**
  * Класс-валидатор для проверки данных, предоставляемых при регистрации игрока.
  * Использует валидацию, основанную на аннотациях, для проверки корректности данных.
  */
-public class RegisterPlayerValidator {
+@Component
+public class RegisterPlayerValidator implements DTOValidator<RegisterPlayerDTO> {
     private final Validator validator;
 
     /**

@@ -84,12 +84,4 @@ public class LoginResponseDTO {
         this.message = message;
     }
 
-    /**
-     * Получение информации о зарегистрированном игроке в виде объекта PlayerDTO.
-     *
-     * @return Объект, представляющий информацию о зарегистрированном игроке, см. {@link PlayerDTO}.
-     */
-    public PlayerDTO getPlayerDTO() {
-        return player;
-    }
 }

@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.astondevs.connection.DatabaseConnectionManager;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,17 +19,12 @@ public class JwtUtil {
     private final String SECRET_KEY;
     private static Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
-    /**
-     * Конструктор класса. Инициализирует секретный ключ из конфигурации приложения.
-     *
-     * @throws RuntimeException если секретный ключ не найден в конфигурации
-     */
-    public JwtUtil() {
-        DatabaseConnectionManager dbManager = new DatabaseConnectionManager();
-        SECRET_KEY = dbManager.getProperties().getProperty("secretKey");
-        if (SECRET_KEY == null) {
-            throw new RuntimeException("Секретный ключ в application.properties не найден");
+
+    public JwtUtil(String secretKey) {
+        if (secretKey == null || secretKey.trim().isEmpty()) {
+            throw new RuntimeException("Секретный ключ не должен быть пустым");
         }
+        this.SECRET_KEY = secretKey;
     }
 
     /**

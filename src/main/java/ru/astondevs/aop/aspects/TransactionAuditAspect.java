@@ -6,100 +6,123 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.astondevs.exception.NotEnoughMoneyException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.astondevs.model.entity.Player;
-import ru.astondevs.model.entity.Transaction;
+import ru.astondevs.model.enums.PlayerActionType;
+import ru.astondevs.service.PlayerAuditService;
 
-import java.math.BigDecimal;
 
 /**
- * Аспект для аудита транзакций с объектами типа {@link Transaction}.
+ * Аспект для аудита действий игрока с транзакциями
  */
 @Aspect
+@Component
 public class TransactionAuditAspect {
+
     private static final Logger log = LoggerFactory.getLogger(TransactionAuditAspect.class);
 
+    private final PlayerAuditService playerAuditService;
+
+    @Autowired
+    public TransactionAuditAspect(PlayerAuditService playerAuditService) {
+        this.playerAuditService = playerAuditService;
+    }
+
     /**
-     * Определение точки среза для дебетовых транзакций.
+     * Точка среза для метода addDebitTransaction
      */
-    @Pointcut("execution(* ru.astondevs.service.TransactionServiceImpl.addDebitTransaction(..))")
+    @Pointcut("execution(* ru.astondevs.service.impl.TransactionServiceImpl.addDebitTransaction(..))")
     public void debitTransactionMethod() {}
 
     /**
-     * Логирование процесса дебетовых транзакций.
+     * Аспект для аудита дебетовых транзакций.
      *
-     * @param joinPoint соединительная точка
-     * @param player игрок
-     * @param debitAmount сумма дебета
-     * @return результат выполнения метода, тип {@link Object}
-     * @throws Throwable возможное исключение {@link Throwable}
+     * @param joinPoint Присоединяемая точка выполнения.
+     * @return Результат выполнения метода, тип {@link Object}.
+     * @throws Throwable возможное исключение, тип {@link Throwable}.
      */
-    @Around("debitTransactionMethod() && args(player, debitAmount)")
-    public Object logDebitTransaction(ProceedingJoinPoint joinPoint,
-                                      Player player,
-                                      BigDecimal debitAmount) throws Throwable {
-        log.info("Попытка дебетовой транзакции для пользователя " +
-                player.getUsername() + " на сумму: " + debitAmount);
-        try {
-            Object result = joinPoint.proceed();
-            log.info("Пользователь " + player.getUsername() +
-                    " успешно совершил дебетовую операцию на сумму: " + debitAmount);
-            return result;
-        } catch (NotEnoughMoneyException e) {
-            log.error("Ошибка дебетовой операции, недостаточно средств на счету пользователя "
-                    + player.getUsername());
-            throw e;
+    @Around("debitTransactionMethod()")
+    public Object logDebitTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = joinPoint.proceed();
+        Object[] args = joinPoint.getArgs();
+        if (args[0] instanceof Player player) {
+            logAction(player.getUsername(), PlayerActionType.DEBIT_TRANSACTION_SUCCESS);
+            playerAuditService.logPlayerAction(player.getId(), PlayerActionType.DEBIT_TRANSACTION_SUCCESS.toString(),
+                    createLogMessage(player.getUsername(), "успешно совершил дебетовую операцию"));
         }
+        return result;
     }
 
     /**
-     * Определение точки среза для кредитных транзакций.
+     * Точка среза для метода addCreditTransaction
      */
-    @Pointcut("execution(* ru.astondevs.service.TransactionServiceImpl.addCreditTransaction(..))")
+    @Pointcut("execution(* ru.astondevs.service.impl.TransactionServiceImpl.addCreditTransaction(..))")
     public void creditTransactionMethod() {}
 
     /**
-     * Логирование процесса кредитных транзакций.
+     * Аспект для аудита кредитных транзакций.
      *
-     * @param joinPoint соединительная точка
-     * @param player игрок
-     * @param creditAmount сумма кредита
-     * @return результат выполнения метода, тип {@link Object}
-     * @throws Throwable возможное исключение {@link Throwable}
+     * @param joinPoint Присоединяемая точка выполнения.
+     * @return Результат выполнения метода, тип {@link Object}.
+     * @throws Throwable возможное исключение, тип {@link Throwable}.
      */
-    @Around("creditTransactionMethod() && args(player, creditAmount)")
-    public Object logCreditTransaction(ProceedingJoinPoint joinPoint,
-                                       Player player,
-                                       BigDecimal creditAmount) throws Throwable {
-        log.info("Попытка кредитной транзакции для пользователя " +
-                player.getUsername() + " на сумму: " + creditAmount);
+    @Around("creditTransactionMethod()")
+    public Object logCreditTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        log.info("Пользователь " + player.getUsername() +
-                " успешно совершил кредитную операцию на сумму: " + creditAmount);
+        Object[] args = joinPoint.getArgs();
+        if (args[0] instanceof Player player) {
+            logAction(player.getUsername(), PlayerActionType.CREDIT_TRANSACTION_SUCCESS);
+            playerAuditService.logPlayerAction(player.getId(), PlayerActionType.CREDIT_TRANSACTION_SUCCESS.toString(),
+                    createLogMessage(player.getUsername(), "успешно совершил кредитную операцию"));
+        }
         return result;
     }
 
     /**
-     * Определение точки среза для просмотра истории транзакций.
+     * Точка среза для метода viewTransactionHistory
      */
-    @Pointcut("execution(* ru.astondevs.service.TransactionServiceImpl.viewTransactionHistory(..))")
+    @Pointcut("execution(* ru.astondevs.service.impl.TransactionServiceImpl.viewTransactionHistory(..))")
     public void viewTransactionHistoryMethod() {}
 
     /**
-     * Логирование процесса просмотра истории транзакций.
+     * Аспект для аудита просмотра истории транзакций.
      *
-     * @param joinPoint соединительная точка
-     * @param id ID транзакции
-     * @param username имя пользователя
-     * @return результат выполнения метода, тип {@link Object}
-     * @throws Throwable возможное исключение {@link Throwable}
+     * @param joinPoint Присоединяемая точка выполнения.
+     * @return Результат выполнения метода, тип {@link Object}.
+     * @throws Throwable возможное исключение, тип {@link Throwable}.
      */
-    @Around("viewTransactionHistoryMethod() && args(id, username)")
-    public Object logViewTransactionHistory(ProceedingJoinPoint joinPoint, Long id, String username) throws Throwable {
-        log.info("Попытка просмотра истории транзакций для пользователя " + username);
+    @Around("viewTransactionHistoryMethod()")
+    public Object logViewTransactionHistory(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        log.info("Пользователь " + username + " успешно просмотрел свою историю транзакций");
+        Object[] args = joinPoint.getArgs();
+        if (args[0] instanceof Player player) {
+            logAction(player.getUsername(), PlayerActionType.VIEW_TRANSACTION_HISTORY);
+            playerAuditService.logPlayerAction(player.getId(), PlayerActionType.VIEW_TRANSACTION_HISTORY.toString(),
+                    createLogMessage(player.getUsername(), "просмотрел свою историю транзакций"));
+        }
         return result;
+    }
+
+    /**
+     * Метод для логирования действий игрока.
+     *
+     * @param username   Имя пользователя.
+     * @param actionType Тип действия игрока.
+     */
+    private void logAction(String username, PlayerActionType actionType) {
+        log.info(createLogMessage(username, actionType.getAction()));
+    }
+
+    /**
+     * Метод для создания сообщения в логе.
+     *
+     * @param username Имя пользователя.
+     * @param action   Действие игрока.
+     * @return Сообщение для лога.
+     */
+    private String createLogMessage(String username, String action) {
+        return "Пользователь " + username + " " + action;
     }
 }
 

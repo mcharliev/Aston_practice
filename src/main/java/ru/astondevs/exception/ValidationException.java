@@ -1,15 +1,32 @@
 package ru.astondevs.exception;
 
+
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 /**
- * Исключение, сигнализирующее о проблемах при валидации данных.
- * <p>
- * Это подкласс класса {@link RuntimeException}, используемый для обозначения исключительных ситуаций,
- * связанных с ошибками валидации данных.
- *
- * @see RuntimeException
+ * Исключение, выбрасываемое при нарушении  валидации
  */
 public class ValidationException extends RuntimeException {
-    public ValidationException(String message) {
+    private final Set<? extends ConstraintViolation<?>> violations;
+
+    /**
+     * Конструктор класса `ValidationException`.
+     *
+     * @param message    Сообщение об ошибке.
+     * @param violations Набор нарушений валидации.
+     */
+    public ValidationException(String message, Set<? extends ConstraintViolation<?>> violations) {
         super(message);
+        this.violations = violations;
+    }
+
+    /**
+     * Получает набор нарушений валидации.
+     *
+     * @return Набор нарушений валидации.
+     */
+    public Set<? extends ConstraintViolation<?>> getViolations() {
+        return violations;
     }
 }

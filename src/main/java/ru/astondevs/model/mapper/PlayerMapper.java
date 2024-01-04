@@ -7,11 +7,12 @@ import ru.astondevs.model.dto.PlayerDTO;
 import ru.astondevs.model.dto.RegisterPlayerDTO;
 import ru.astondevs.model.entity.Player;
 
+
 /**
  * Интерфейс маппера для конвертации объектов между {@link Player} и его DTO представлениями.
  * Использует библиотеку MapStruct для автоматического создания реализации на основе аннотаций.
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PlayerMapper {
 
     PlayerMapper INSTANCE = Mappers.getMapper(PlayerMapper.class);

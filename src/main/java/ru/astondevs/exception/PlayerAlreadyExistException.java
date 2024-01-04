@@ -8,10 +8,7 @@ package ru.astondevs.exception;
  *
  * @see RuntimeException
  */
-public class ConflictException extends RuntimeException {
-    public ConflictException(String message) {
-        super(message);
-    }
+public class PlayerAlreadyExistException extends RuntimeException {
 }
 
 

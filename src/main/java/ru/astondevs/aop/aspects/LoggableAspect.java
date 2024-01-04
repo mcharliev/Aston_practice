@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Аспект для логирования методов и классов, аннотированных {@code @Loggable}.
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * его завершении и времени выполнения.
  */
 @Aspect
+@Component
 public class LoggableAspect {
     private static final Logger log = LoggerFactory.getLogger(LoggableAspect.class);
 
