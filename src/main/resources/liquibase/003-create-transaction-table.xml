@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="003-create-table-transactions" author="Merdan">
+        <createTable schemaName="wallet_service" tableName="transactions">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(20)">
+                <constraints checkConstraint="type IN ('DEBIT', 'CREDIT')" nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(10, 2)"/>
+            <column name="local_date_time" type="TIMESTAMP"/>
+            <column name="player_id" type="BIGINT">
+                <constraints
+                        references="wallet_service.players(id)"
+                foreignKeyName="fk_transactions_players"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

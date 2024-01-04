@@ -1,0 +1,11 @@
+database:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5415/wallet_service_db
+  username: Merdan
+  password: 353062
+  changeLogLog: liquibase/changelog.xml
+  defaultSchema: wallet_service
+  liquibaseSchema: migration
+jwt:
+  secretKey: MY_SECRET_KEY
+
